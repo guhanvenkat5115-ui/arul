@@ -21,7 +21,13 @@ class LoginResponse(BaseModel):
 @router.post("/login", response_model=LoginResponse)
 def login(payload: LoginRequest):
     if payload.role == "admin":
-        if payload.username.lower() == "admin" and payload.password == "Arul@20":
+        from app.routers.settings import _get_setting
+        admin_username = _get_setting("admin_username", "admin")
+        admin_password = _get_setting("admin_password", "Arul@20")
+        
+        # We allow case insensitive check for admin_username if they use the default, 
+        # but exact match for custom to be safe, or just stick to case-insensitive.
+        if payload.username.lower() == admin_username.lower() and payload.password == admin_password:
             return LoginResponse(
                 success=True,
                 role="admin",

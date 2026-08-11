@@ -99,6 +99,10 @@ class TaxItem(BaseModel):
 
 class SettingsUpdate(BaseModel):
     taxes: list[TaxItem]
+    admin_username: Optional[str] = None
+    admin_password: Optional[str] = None
 
 class SettingsOut(BaseModel):
     taxes: list[TaxItem]
+    admin_username: Optional[str] = None
+    admin_password: Optional[str] = None

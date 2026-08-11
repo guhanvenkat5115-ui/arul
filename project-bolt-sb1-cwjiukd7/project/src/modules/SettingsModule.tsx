@@ -12,6 +12,8 @@ export interface TaxItem {
 export function SettingsModule() {
   const { notify } = useToast();
   const [taxes, setTaxes] = useState<TaxItem[]>([]);
+  const [adminUsername, setAdminUsername] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
@@ -21,8 +23,10 @@ export function SettingsModule() {
 
   async function loadSettings() {
     try {
-      const data = await fetchApi<{ taxes: TaxItem[] }>('/settings/');
+      const data = await fetchApi<{ taxes: TaxItem[], admin_username?: string, admin_password?: string }>('/settings/');
       setTaxes(data.taxes || []);
+      if (data.admin_username) setAdminUsername(data.admin_username);
+      if (data.admin_password) setAdminPassword(data.admin_password);
     } catch (e: any) {
       notify(e.message || 'Could not load settings.', 'error');
     } finally {
@@ -68,7 +72,11 @@ export function SettingsModule() {
     try {
       await fetchApi('/settings/', {
         method: 'PUT',
-        body: JSON.stringify({ taxes }),
+        body: JSON.stringify({ 
+          taxes,
+          admin_username: adminUsername || undefined,
+          admin_password: adminPassword || undefined
+        }),
       });
       notify('Settings saved successfully.', 'success');
     } catch (e: any) {
@@ -163,6 +171,36 @@ export function SettingsModule() {
                   </div>
                 ))
               )}
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-brand-100 bg-brand-50/30 p-5">
+            <div className="mb-4">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-600">Admin Credentials</h3>
+              <p className="mt-1 text-xs text-brand-500">Update the username and password used to access the admin portal.</p>
+            </div>
+            
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-brand-700">Admin Username</label>
+                <input
+                  type="text"
+                  value={adminUsername}
+                  onChange={(e) => setAdminUsername(e.target.value)}
+                  className="w-full rounded-lg border border-brand-200 bg-white p-2.5 text-sm text-brand-800 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                  placeholder="admin"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-brand-700">Admin Password</label>
+                <input
+                  type="text"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  className="w-full rounded-lg border border-brand-200 bg-white p-2.5 text-sm text-brand-800 outline-none transition focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                  placeholder="Arul@20"
+                />
+              </div>
             </div>
           </div>
 
