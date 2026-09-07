@@ -2,7 +2,7 @@ export const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
 
 export async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_URL}${endpoint}`;
-  
+
   const defaultHeaders: Record<string, string> = {
     'Accept': 'application/json',
   };

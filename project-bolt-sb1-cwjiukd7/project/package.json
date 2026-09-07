@@ -45,7 +45,7 @@
   },
   "build": {
     "appId": "com.arulthangaiya.weighbridge",
-    "productName": "Weighbridge Admin",
+    "productName": "accountarul",
     "directories": {
       "output": "dist-electron"
     },
